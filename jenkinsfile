@@ -9,14 +9,6 @@ pipeline {
         PATH = "${tool 'JDK 21'}/bin:${env.PATH}"
     }
 
-    parameters {
-        string(name: 'NAME', defaultValue: 'John', description: 'Enter your name')
-        string(name: 'AGE', defaultValue: '29', description: 'Enter your age')
-        string(name: 'GENDER', defaultValue: 'Male', description: 'Enter gender (Male/Female/Other)')
-        string(name: 'LANGUAGE', defaultValue: 'Java', description: 'Enter preferred language')
-        string(name: 'CITY', defaultValue: 'Goa', description: 'Enter your city')
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -30,11 +22,9 @@ pipeline {
             }
         }
 
-        stage('Run') {
+        stage('Run with Input File') {
             steps {
-                sh """
-                    echo -e "${params.NAME}\\n${params.AGE}\\n${params.GENDER}\\n${params.LANGUAGE}\\n${params.CITY}" | java FormApp
-                """
+                sh 'java FormApp < input.txt'
             }
         }
     }

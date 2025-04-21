@@ -1,0 +1,66 @@
+pipeline {
+    agent any
+
+    tools {
+        jdk 'JDK11'          // Make sure this name matches your Jenkins global tool config
+        maven 'Maven3'       // Ensure Maven3 is configured in Jenkins
+    }
+
+    environment {
+        // Example environment variable (optional)
+        MAVEN_OPTS = '-Dmaven.test.failure.ignore=false'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Cloning GitHub repository...'
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Building the project...'
+                sh 'mvn clean compile'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Running unit tests...'
+                sh 'mvn test'
+            }
+        }
+
+        stage('Package') {
+            steps {
+                echo 'Packaging the application...'
+                sh 'mvn package'
+            }
+        }
+
+        stage('Archive Artifacts') {
+            steps {
+                echo 'Archiving build artifacts...'
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying the application...'
+                // Add deployment logic here, e.g., copy JAR to server, call deployment script, etc.
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Build and deployment succeeded!'
+        }
+        failure {
+            echo '❌ Build or deployment failed.'
+        }
+    }
+}

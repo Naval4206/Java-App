@@ -2,4 +2,4 @@ John
 25
 Male
 Java
-Mumbai
+delhi

@@ -2,65 +2,40 @@ pipeline {
     agent any
 
     tools {
-        jdk 'JDK11'          // Make sure this name matches your Jenkins global tool config
-        maven 'Maven3'       // Ensure Maven3 is configured in Jenkins
+        jdk 'JDK 21'
     }
 
     environment {
-        // Example environment variable (optional)
-        MAVEN_OPTS = '-Dmaven.test.failure.ignore=false'
+        PATH = "${tool 'JDK 21'}/bin:${env.PATH}"
+    }
+
+    parameters {
+        string(name: 'NAME', defaultValue: 'John', description: 'Enter your name')
+        string(name: 'AGE', defaultValue: '25', description: 'Enter your age')
+        string(name: 'GENDER', defaultValue: 'Male', description: 'Enter gender (Male/Female/Other)')
+        string(name: 'LANGUAGE', defaultValue: 'Java', description: 'Enter preferred language')
+        string(name: 'CITY', defaultValue: 'Mumbai', description: 'Enter your city')
     }
 
     stages {
         stage('Checkout') {
             steps {
-                echo 'Cloning GitHub repository...'
-                checkout scm
+                git branch: 'main', url: 'https://github.com/Naval4206/Java-App.git'
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Building the project...'
-                sh 'mvn clean compile'
+                sh 'javac FormApp.java'
             }
         }
 
-        stage('Test') {
+        stage('Run') {
             steps {
-                echo 'Running unit tests...'
-                sh 'mvn test'
+                sh """
+                    echo -e "${params.NAME}\\n${params.AGE}\\n${params.GENDER}\\n${params.LANGUAGE}\\n${params.CITY}" | java FormApp
+                """
             }
-        }
-
-        stage('Package') {
-            steps {
-                echo 'Packaging the application...'
-                sh 'mvn package'
-            }
-        }
-
-        stage('Archive Artifacts') {
-            steps {
-                echo 'Archiving build artifacts...'
-                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo 'Deploying the application...'
-                // Add deployment logic here, e.g., copy JAR to server, call deployment script, etc.
-            }
-        }
-    }
-
-    post {
-        success {
-            echo '✅ Build and deployment succeeded!'
-        }
-        failure {
-            echo '❌ Build or deployment failed.'
         }
     }
 }

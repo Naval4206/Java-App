@@ -11,10 +11,10 @@ pipeline {
 
     parameters {
         string(name: 'NAME', defaultValue: 'John', description: 'Enter your name')
-        string(name: 'AGE', defaultValue: '25', description: 'Enter your age')
+        string(name: 'AGE', defaultValue: '29', description: 'Enter your age')
         string(name: 'GENDER', defaultValue: 'Male', description: 'Enter gender (Male/Female/Other)')
         string(name: 'LANGUAGE', defaultValue: 'Java', description: 'Enter preferred language')
-        string(name: 'CITY', defaultValue: 'Mumbai', description: 'Enter your city')
+        string(name: 'CITY', defaultValue: 'Delhi', description: 'Enter your city')
     }
 
     stages {

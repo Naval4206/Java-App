@@ -1,5 +1,5 @@
 John
-29
+32
 Male
 Java
-Delhi
+Goa
